@@ -1,0 +1,43 @@
+# Build outputs
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# VS/Rider
+.vs/
+.idea/
+*.DotSettings.user
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Publish
+publish/
+**/Properties/PublishProfiles/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment / secrets
+appsettings.Development.json
+.env
+*.env
+secrets.json
+
+# Test results
+TestResults/
+coverage/
+*.trx
+*.coveragexml
