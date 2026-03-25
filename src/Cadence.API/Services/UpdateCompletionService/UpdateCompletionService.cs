@@ -1,5 +1,6 @@
 using Cadence.API.Data;
 using Cadence.API.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cadence.API.Services.UpdateCompletionService;
 
@@ -12,20 +13,26 @@ public class UpdateCompletionService(AppDbContext dbContext) : IUpdateCompletion
 {
     public async Task ExecuteAsync(long habitId)
     {
-        var habit = await dbContext.Habits.FindAsync(habitId);
-        
-        if (habit == null)
-            throw new InvalidOperationException("Habit not found");
+        var completion = await dbContext.Completions
+            .Where(c => c.HabitId == habitId && c.Date == DateOnly.FromDateTime(DateTime.Today))
+            .FirstOrDefaultAsync();
 
-        var completion = habit.Completions?.FirstOrDefault(c => c.Date == DateOnly.FromDateTime(DateTime.Today));
-        
-        if(completion == null)
-            habit.Completions?.Add(new Completion{Date = DateOnly.FromDateTime(DateTime.Today), HabitId = habitId});
+        if (completion is not null)
+        {
+            dbContext.Completions.Remove(completion);
+        }
         else
-            habit.Completions!.Remove(completion);
-        
-        dbContext.Update(habit);
+        {
+            completion = new Completion
+            {
+                HabitId = habitId,
+                Date = DateOnly.FromDateTime(DateTime.UtcNow),
+            };
+            
+            dbContext.Completions.Add(completion);
+        }
         
         await dbContext.SaveChangesAsync();
+        
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cadence.API.Controllers;
 
 [ApiController]
-[Route("habit")]
+[Route("api/habit")]
 public class HabitController(IGetHabitsService getHabitsService, ICreateHabitService createHabitService, IUpdateCompletionService updateCompletionService) : ControllerBase
 {
     [HttpGet]
@@ -23,7 +23,7 @@ public class HabitController(IGetHabitsService getHabitsService, ICreateHabitSer
         return Created("",newHabitId);
     }
 
-    [HttpPost("completion/{habitId:long}")]
+    [HttpPut("completion/{habitId:long}")]
     public async Task<IActionResult> CompleteHabitAsync(long habitId)
     {
         await updateCompletionService.ExecuteAsync(habitId);

@@ -13,16 +13,43 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         modelBuilder.Entity<Habit>(entity =>
         {
             entity.HasKey(h => h.Id);
+            
+            entity.Property(h => h.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(h => h.Description)
+                .IsRequired()
+                .HasMaxLength(500);
+
+            entity.Property(h => h.Color)
+                .IsRequired()
+                .HasMaxLength(20);
+
+            entity.Property(h => h.Icon)
+                .IsRequired()
+                .HasMaxLength(50);
+            
             entity.Property(h => h.ScheduledDays)
                 .HasColumnType("jsonb");
+
+            entity.Property(h => h.CreatedAt)
+                .HasColumnType("timestamptz")
+                .HasDefaultValueSql("now()");
+
+            entity.Property(h => h.IsArchived)
+                .HasDefaultValue(false);
         });
 
         modelBuilder.Entity<Completion>(entity =>
         {
             entity.HasKey(c => c.Id);
+            
             entity.HasOne(c => c.Habit)
                 .WithMany(h => h.Completions)
-                .HasForeignKey(c => c.HabitId);
+                .HasForeignKey(c => c.HabitId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
             entity.HasIndex(c => new { c.HabitId, c.Date }).IsUnique();
         });
     }

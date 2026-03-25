@@ -14,9 +14,15 @@ public class GetHabitsService(AppDbContext dbContext)
     public async Task<List<GetHabitOutputDto>> ExecuteAsync()
     {
         const int placeholderStreak = 0;
-        
-        return await dbContext.Habits
-            .Select(h => new GetHabitOutputDto(h.Id, h.Name, h.Color, placeholderStreak, h.ScheduledDays.ToList()))
-            .ToListAsync<GetHabitOutputDto>();
+
+        var habits = await dbContext.Habits.ToListAsync();
+
+        return habits.Select(h => new GetHabitOutputDto(
+                Id: h.Id,
+                Name: h.Name,
+                Color: h.Color,
+                Streak: placeholderStreak,
+                Schedules: h.ScheduledDays.Select(d => d.ToString()).ToList()))
+            .ToList();
     }
 }
