@@ -15,7 +15,15 @@ public class GetHabitByIdService(AppDbContext dbContext) : IGetHabitByIdService
         var habit = await dbContext.Habits.Where(h => h.Id == habitId).FirstOrDefaultAsync();
 
         return habit != null 
-            ? new GetHabitByIdOutputDto(habit.Id, habit.Name)
+            ? new GetHabitByIdOutputDto(
+                habit.Id, 
+                habit.Name,
+                habit.Description,
+                habit.Color,
+                habit.Icon,
+                Schedules: habit.ScheduledDays.Select(d => d.ToString()).ToList(),
+                habit.CreatedAt,
+                habit.IsArchived)
             : null;
     }
 }

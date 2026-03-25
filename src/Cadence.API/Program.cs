@@ -18,12 +18,25 @@ builder.Services.AddScoped<ICreateHabitService, CreateHabitService>();
 builder.Services.AddScoped<IUpdateCompletionService, UpdateCompletionService>();
 
 builder.Services.AddProblemDetails();
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<AppDbContext>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var dbConnected = await db.Database.CanConnectAsync();
+    
+    if(!dbConnected)
+        throw new Exception("Could not connect to database");
+}
 
 if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 
+app.UseExceptionHandler();
 app.MapControllers();
+app.MapHealthChecks("/health");
 
 app.Run();

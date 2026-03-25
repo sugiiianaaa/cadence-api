@@ -1,3 +1,11 @@
 namespace Cadence.API.Services.GetHabitByIdService;
 
-public record GetHabitByIdOutputDto(long Id, string Name);
+public record GetHabitByIdOutputDto(
+    long Id, 
+    string Name,  
+    string? Description, 
+    string Color,
+    string Icon,
+    List<string>  Schedules,
+    DateTime CreatedAt,
+    bool IsArchived);
