@@ -17,6 +17,7 @@ public class CreateHabitService(AppDbContext dbContext) : ICreateHabitService
             Name = input.Name,
             Description = input.Description,
             Color = input.Color,
+            Icon = input.Icon,
             ScheduledDays = input.ScheduledDays.ToArray(),
             IsArchived = false,
             CreatedAt = DateTime.UtcNow,

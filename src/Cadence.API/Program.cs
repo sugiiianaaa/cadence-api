@@ -1,5 +1,6 @@
 using Cadence.API.Data;
 using Cadence.API.Services.CreateHabitsService;
+using Cadence.API.Services.GetHabitByIdService;
 using Cadence.API.Services.GetHabitsService;
 using Cadence.API.Services.UpdateCompletionService;
 using Microsoft.EntityFrameworkCore;
@@ -12,8 +13,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddControllers();
 builder.Services.AddScoped<IGetHabitsService, GetHabitsService>();
+builder.Services.AddScoped<IGetHabitByIdService, GetHabitByIdService>();
 builder.Services.AddScoped<ICreateHabitService, CreateHabitService>();
 builder.Services.AddScoped<IUpdateCompletionService, UpdateCompletionService>();
+
+builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 

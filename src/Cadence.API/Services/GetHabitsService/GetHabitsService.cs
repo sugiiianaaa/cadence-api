@@ -15,14 +15,14 @@ public class GetHabitsService(AppDbContext dbContext)
     {
         const int placeholderStreak = 0;
 
-        var habits = await dbContext.Habits.ToListAsync();
-
-        return habits.Select(h => new GetHabitOutputDto(
-                Id: h.Id,
-                Name: h.Name,
-                Color: h.Color,
-                Streak: placeholderStreak,
-                Schedules: h.ScheduledDays.Select(d => d.ToString()).ToList()))
+        var habits = await dbContext.Habits                                                       
+            .Where(h => !h.IsArchived)                            
+            .Select(h => new { h.Id, h.Name, h.Color, h.ScheduledDays })                          
+            .ToListAsync();                                                                       
+   
+        return habits.Select(h => new GetHabitOutputDto(                                          
+                h.Id, h.Name, h.Color, placeholderStreak,             
+                h.ScheduledDays.Select(d => d.ToString()).ToList()))
             .ToList();
     }
 }
