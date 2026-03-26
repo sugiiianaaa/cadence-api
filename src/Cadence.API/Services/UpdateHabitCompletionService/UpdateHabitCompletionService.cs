@@ -1,15 +1,16 @@
 using Cadence.API.Data;
 using Cadence.API.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
-namespace Cadence.API.Services.UpdateCompletionService;
+namespace Cadence.API.Services.UpdateHabitCompletionService;
 
-public interface IUpdateCompletionService
+public interface IUpdateHabitCompletionService
 {
     public Task<bool> ExecuteAsync(long habitId);
 }
 
-public class UpdateCompletionService(AppDbContext dbContext) : IUpdateCompletionService
+public class UpdateHabitCompletionService(AppDbContext dbContext, IMemoryCache cache) : IUpdateHabitCompletionService
 {
     public async Task<bool> ExecuteAsync(long habitId)
     {
@@ -36,6 +37,7 @@ public class UpdateCompletionService(AppDbContext dbContext) : IUpdateCompletion
         }
 
         await dbContext.SaveChangesAsync();
+        cache.Remove($"habit-status:{DateTime.UtcNow.Year}");
         return true;
     }
 }

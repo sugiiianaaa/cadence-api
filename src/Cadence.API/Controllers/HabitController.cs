@@ -1,7 +1,8 @@
 using Cadence.API.Services.CreateHabitsService;
 using Cadence.API.Services.GetHabitByIdService;
 using Cadence.API.Services.GetHabitsService;
-using Cadence.API.Services.UpdateCompletionService;
+using Cadence.API.Services.GetHabitStatusService;
+using Cadence.API.Services.UpdateHabitCompletionService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cadence.API.Controllers;
@@ -11,8 +12,9 @@ namespace Cadence.API.Controllers;
 public class HabitController(
     IGetHabitsService getHabitsService, 
     ICreateHabitService createHabitService, 
-    IUpdateCompletionService updateCompletionService,
-    IGetHabitByIdService getHabitByIdService) : ControllerBase
+    IUpdateHabitCompletionService updateHabitCompletionService,
+    IGetHabitByIdService getHabitByIdService,
+    IGetHabitStatusService getHabitStatusService) : ControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<List<GetHabitOutputDto>>> GetHabitsAsync()
@@ -41,11 +43,18 @@ public class HabitController(
     [HttpPost("{habitId:long}/completion")]
     public async Task<ActionResult> ToggleCompletion(long habitId)
     {
-        var found = await updateCompletionService.ExecuteAsync(habitId);
+        var found = await updateHabitCompletionService.ExecuteAsync(habitId);
         
         if (!found) 
             return Problem(detail: $"Habit {habitId} not found.", statusCode: 404);
         
         return Ok();
+    }
+
+    [HttpGet("status")]
+    public async Task<ActionResult<GetHabitStatusOutput>> GetHabitStatus()
+    {
+        var result  = await getHabitStatusService.ExecuteAsync();
+        return Ok(result);
     }
 }
