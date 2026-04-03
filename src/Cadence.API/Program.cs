@@ -33,6 +33,8 @@ using (var scope = app.Services.CreateScope())
     
     if(!dbConnected)
         throw new Exception("Could not connect to database");
+    
+    await db.Database.MigrateAsync();
 }
 
 if (app.Environment.IsDevelopment())
