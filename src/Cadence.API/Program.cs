@@ -3,6 +3,7 @@ using Cadence.API.Services.CreateHabitsService;
 using Cadence.API.Services.GetHabitStatusService;
 using Cadence.API.Services.GetHabitByIdService;
 using Cadence.API.Services.GetHabitsService;
+using Cadence.API.Services.GetTodayHabitsService;
 using Cadence.API.Services.UpdateHabitCompletionService;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +20,7 @@ builder.Services.AddScoped<IGetHabitByIdService, GetHabitByIdService>();
 builder.Services.AddScoped<ICreateHabitService, CreateHabitService>();
 builder.Services.AddScoped<IUpdateHabitCompletionService, UpdateHabitCompletionService>();
 builder.Services.AddScoped<IGetHabitStatusService, GetHabitStatusService>();
+builder.Services.AddScoped<IGetTodayHabitsService, GetTodayHabitsService>();
 
 builder.Services.AddProblemDetails();
 builder.Services.AddHealthChecks()

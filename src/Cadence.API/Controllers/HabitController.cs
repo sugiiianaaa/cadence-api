@@ -2,6 +2,7 @@ using Cadence.API.Services.CreateHabitsService;
 using Cadence.API.Services.GetHabitByIdService;
 using Cadence.API.Services.GetHabitsService;
 using Cadence.API.Services.GetHabitStatusService;
+using Cadence.API.Services.GetTodayHabitsService;
 using Cadence.API.Services.UpdateHabitCompletionService;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,11 +11,12 @@ namespace Cadence.API.Controllers;
 [ApiController]
 [Route("api/habits")]
 public class HabitController(
-    IGetHabitsService getHabitsService, 
-    ICreateHabitService createHabitService, 
+    IGetHabitsService getHabitsService,
+    ICreateHabitService createHabitService,
     IUpdateHabitCompletionService updateHabitCompletionService,
     IGetHabitByIdService getHabitByIdService,
-    IGetHabitStatusService getHabitStatusService) : ControllerBase
+    IGetHabitStatusService getHabitStatusService,
+    IGetTodayHabitsService getTodayHabitsService) : ControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<List<GetHabitOutputDto>>> GetHabitsAsync()
@@ -31,6 +33,13 @@ public class HabitController(
         return result == null 
             ? Problem(detail: $"Habit {habitId} not found.", statusCode: 404) 
             : Ok(result);
+    }
+
+    [HttpGet("today")]
+    public async Task<ActionResult<GetTodayHabitsDto>> GetTodayHabits()
+    {
+        var result = await getTodayHabitsService.ExecuteAsync();
+        return Ok(result);
     }
 
     [HttpPost]
