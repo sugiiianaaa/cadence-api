@@ -20,7 +20,6 @@ public class GetHabitByIdService(AppDbContext dbContext) : IGetHabitByIdService
                 habit.Name,
                 habit.Description,
                 habit.Color,
-                habit.Icon,
                 Schedules: habit.ScheduledDays.Select(d => d.ToString()).ToList(),
                 habit.CreatedAt,
                 habit.IsArchived)

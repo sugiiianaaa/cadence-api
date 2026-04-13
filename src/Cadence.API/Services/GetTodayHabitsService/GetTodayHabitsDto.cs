@@ -1,5 +1,7 @@
+using Cadence.API.Data.ValueObjects;
+
 public record GetTodayHabitsDto(
-    List<TodayHabitDto> TodayHabits
+    List<TodayHabitDto> Habits
 );
 
 
@@ -9,6 +11,5 @@ public record TodayHabitDto(
     string Color,
     bool IsCompleted,
     int Streak,
-    TimeOnly StartRangeTime,
-    TimeOnly EndRangeTime
+    TimeWindow? TimeWindow
 );

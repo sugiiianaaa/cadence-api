@@ -1,4 +1,5 @@
 using Cadence.API.Data;
+using Cadence.API.Data.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cadence.API.Services.GetTodayHabitsService;
@@ -24,6 +25,8 @@ public class GetTodayHabitsService(AppDbContext dbContext)
                 h.Name,
                 h.Color,
                 h.ScheduledDays,
+                h.StartTime,
+                h.EndTime,
                 Completions = h.Completions
                     .Where(c => c.Date.Year == today.Year)
                     .Select(c => c.Date)
@@ -40,8 +43,15 @@ public class GetTodayHabitsService(AppDbContext dbContext)
                 var streak = ComputeStreak(completionSet, scheduled, today);
                 var isCompleted = completionSet.Contains(today);
 
-                return new TodayHabitDto(h.Id, h.Name, h.Color, isCompleted, streak,
-                    default, default);
+                return new TodayHabitDto(
+                    Id: h.Id,
+                    Name: h.Name,
+                    Color: h.Color,
+                    IsCompleted: isCompleted, 
+                    Streak: streak,
+                    TimeWindow: h.StartTime != null && h.EndTime != null 
+                        ? new TimeWindow(h.StartTime.Value, h.EndTime.Value)
+                        : null);
             })
             .ToList();
 

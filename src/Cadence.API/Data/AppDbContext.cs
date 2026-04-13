@@ -24,13 +24,13 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.Property(h => h.Color)
                 .IsRequired()
                 .HasMaxLength(20);
-
-            entity.Property(h => h.Icon)
-                .IsRequired()
-                .HasMaxLength(50);
             
             entity.Property(h => h.ScheduledDays)
                 .HasColumnType("jsonb");
+
+            entity.Property(h => h.StartTime);
+            
+            entity.Property(h => h.EndTime);
 
             entity.Property(h => h.CreatedAt)
                 .HasColumnType("timestamptz")

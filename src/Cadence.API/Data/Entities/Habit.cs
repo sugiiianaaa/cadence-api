@@ -6,8 +6,9 @@ public class Habit
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
     public string Color { get; set; } = string.Empty;
-    public string Icon { get; set; } = string.Empty;
     public DayOfWeek[] ScheduledDays { get; set; } = [];
+    public TimeOnly? StartTime { get; set; }
+    public TimeOnly? EndTime { get; set; }
     public DateTime CreatedAt { get; set; }
     public bool IsArchived { get; set; }
 

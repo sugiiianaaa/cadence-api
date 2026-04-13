@@ -5,7 +5,6 @@ public record GetHabitByIdOutputDto(
     string Name,  
     string? Description, 
     string Color,
-    string Icon,
     List<string>  Schedules,
     DateTime CreatedAt,
     bool IsArchived);

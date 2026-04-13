@@ -1,10 +1,14 @@
+using System.Collections.Immutable;
 using Cadence.API.Data;
+using Cadence.API.Middleware;
+using Cadence.API.Services.ArchiveHabitService;
+using Cadence.API.Services.CreateHabitCompletionService;
 using Cadence.API.Services.CreateHabitsService;
-using Cadence.API.Services.GetHabitStatusService;
+using Cadence.API.Services.DeleteHabitCompletionService;
 using Cadence.API.Services.GetHabitByIdService;
 using Cadence.API.Services.GetHabitsService;
 using Cadence.API.Services.GetTodayHabitsService;
-using Cadence.API.Services.UpdateHabitCompletionService;
+using Cadence.API.Services.PatchHabitService;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,9 +22,11 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IGetHabitsService, GetHabitsService>();
 builder.Services.AddScoped<IGetHabitByIdService, GetHabitByIdService>();
 builder.Services.AddScoped<ICreateHabitService, CreateHabitService>();
-builder.Services.AddScoped<IUpdateHabitCompletionService, UpdateHabitCompletionService>();
-builder.Services.AddScoped<IGetHabitStatusService, GetHabitStatusService>();
 builder.Services.AddScoped<IGetTodayHabitsService, GetTodayHabitsService>();
+builder.Services.AddScoped<IPatchHabitService, PatchHabitService>();
+builder.Services.AddScoped<IArchiveHabitService, ArchiveHabitService>();
+builder.Services.AddScoped<ICreateHabitCompletionService, CreateHabitCompletionService>();
+builder.Services.AddScoped<IDeleteHabitCompletionService, DeleteHabitCompletionService>();
 
 builder.Services.AddProblemDetails();
 builder.Services.AddHealthChecks()
@@ -43,6 +49,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 
 app.UseExceptionHandler();
+app.UseMiddleware<ApiKeyMiddleware>();
 app.MapControllers();
 app.MapHealthChecks("/health");
 
