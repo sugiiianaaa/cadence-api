@@ -1,9 +1,8 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
-COPY Cadence.sln .
 COPY src/Cadence.API/Cadence.API.csproj src/Cadence.API/
-RUN dotnet restore
-COPY . .
+RUN dotnet restore src/Cadence.API/Cadence.API.csproj
+COPY src/ src/
 RUN dotnet publish src/Cadence.API -c Release -o /app
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0
