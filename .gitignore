@@ -41,3 +41,6 @@ TestResults/
 coverage/
 *.trx
 *.coveragexml
+
+# LLM
+.claude/

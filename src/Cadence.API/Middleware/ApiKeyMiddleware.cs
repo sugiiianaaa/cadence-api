@@ -2,7 +2,7 @@ namespace Cadence.API.Middleware;
 
 public class ApiKeyMiddleware(RequestDelegate next, IConfiguration config)
 {
-    private static readonly string[] PublicPaths = ["/health", "/openapi"];
+    private static readonly string[] PublicPaths = ["/health", "/openapi", "/scalar"];
 
     public async Task InvokeAsync(HttpContext context)
     {

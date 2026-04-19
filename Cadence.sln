@@ -2,7 +2,13 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72D-47B6-A68D-7590B98EB39B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cadence.API", "src/Cadence.API/Cadence.API.csproj", "{4FDE493E-C5E4-496C-A333-789DDBC8ACBB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cadence.API", "src\Cadence.API\Cadence.API.csproj", "{4FDE493E-C5E4-496C-A333-789DDBC8ACBB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{69260B46-315C-4B6C-A677-8CBF270B9C0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cadence.API.Test", "tests\Cadence.API.Test\Cadence.API.Test.csproj", "{4D9D7F50-8DD9-4FB6-8AC0-8FD1B93AFD8B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cadence.API.IntegrationTest", "tests\Cadence.API.IntegrationTest\Cadence.API.IntegrationTest.csproj", "{B2720FEC-649F-4873-A8FA-42F22CCC5F69}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,11 +32,37 @@ Global
 		{4FDE493E-C5E4-496C-A333-789DDBC8ACBB}.Release|x64.Build.0 = Release|Any CPU
 		{4FDE493E-C5E4-496C-A333-789DDBC8ACBB}.Release|x86.ActiveCfg = Release|Any CPU
 		{4FDE493E-C5E4-496C-A333-789DDBC8ACBB}.Release|x86.Build.0 = Release|Any CPU
+		{4D9D7F50-8DD9-4FB6-8AC0-8FD1B93AFD8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D9D7F50-8DD9-4FB6-8AC0-8FD1B93AFD8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D9D7F50-8DD9-4FB6-8AC0-8FD1B93AFD8B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4D9D7F50-8DD9-4FB6-8AC0-8FD1B93AFD8B}.Debug|x64.Build.0 = Debug|Any CPU
+		{4D9D7F50-8DD9-4FB6-8AC0-8FD1B93AFD8B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4D9D7F50-8DD9-4FB6-8AC0-8FD1B93AFD8B}.Debug|x86.Build.0 = Debug|Any CPU
+		{4D9D7F50-8DD9-4FB6-8AC0-8FD1B93AFD8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D9D7F50-8DD9-4FB6-8AC0-8FD1B93AFD8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D9D7F50-8DD9-4FB6-8AC0-8FD1B93AFD8B}.Release|x64.ActiveCfg = Release|Any CPU
+		{4D9D7F50-8DD9-4FB6-8AC0-8FD1B93AFD8B}.Release|x64.Build.0 = Release|Any CPU
+		{4D9D7F50-8DD9-4FB6-8AC0-8FD1B93AFD8B}.Release|x86.ActiveCfg = Release|Any CPU
+		{4D9D7F50-8DD9-4FB6-8AC0-8FD1B93AFD8B}.Release|x86.Build.0 = Release|Any CPU
+		{B2720FEC-649F-4873-A8FA-42F22CCC5F69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2720FEC-649F-4873-A8FA-42F22CCC5F69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2720FEC-649F-4873-A8FA-42F22CCC5F69}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B2720FEC-649F-4873-A8FA-42F22CCC5F69}.Debug|x64.Build.0 = Debug|Any CPU
+		{B2720FEC-649F-4873-A8FA-42F22CCC5F69}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B2720FEC-649F-4873-A8FA-42F22CCC5F69}.Debug|x86.Build.0 = Debug|Any CPU
+		{B2720FEC-649F-4873-A8FA-42F22CCC5F69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2720FEC-649F-4873-A8FA-42F22CCC5F69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2720FEC-649F-4873-A8FA-42F22CCC5F69}.Release|x64.ActiveCfg = Release|Any CPU
+		{B2720FEC-649F-4873-A8FA-42F22CCC5F69}.Release|x64.Build.0 = Release|Any CPU
+		{B2720FEC-649F-4873-A8FA-42F22CCC5F69}.Release|x86.ActiveCfg = Release|Any CPU
+		{B2720FEC-649F-4873-A8FA-42F22CCC5F69}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4FDE493E-C5E4-496C-A333-789DDBC8ACBB} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{4D9D7F50-8DD9-4FB6-8AC0-8FD1B93AFD8B} = {69260B46-315C-4B6C-A677-8CBF270B9C0E}
+		{B2720FEC-649F-4873-A8FA-42F22CCC5F69} = {69260B46-315C-4B6C-A677-8CBF270B9C0E}
 	EndGlobalSection
 EndGlobal
