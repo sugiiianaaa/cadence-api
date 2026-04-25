@@ -2,9 +2,9 @@ namespace Cadence.API.Data.Entities;
 
 public class Completion
 {
-    public long Id { get; set; }
-    public long HabitId { get; set; }
-    public DateOnly Date { get; set; }
+    public long Id { get; init; }
+    public long HabitId { get; init; }
+    public DateOnly Date { get; init; }
 
-    public Habit Habit { get; set; } = null!;
+    public Habit Habit { get; init; } = null!;
 }
