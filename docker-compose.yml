@@ -1,0 +1,39 @@
+services:
+  cadence-api:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    networks:
+      - caddy_network
+      - cadence_internal
+    depends_on:
+      cadence-db:
+        condition: service_healthy
+
+  cadence-db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-cadence}
+      - POSTGRES_USER=${POSTGRES_USER:-cadence}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - cadence_pgdata:/var/lib/postgresql/data
+    networks:
+      - cadence_internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-cadence}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  caddy_network:
+    external: true
+    name: caddy_network
+  cadence_internal:
+
+volumes:
+  cadence_pgdata:
