@@ -1,17 +1,34 @@
+using System.ComponentModel;
 using Cadence.CLI.Client;
 using Spectre.Console;
 using Spectre.Console.Cli;
-using System.ComponentModel;
 
 namespace Cadence.CLI.Commands;
 
 // cx habit add <name>
-sealed class AddHabitCommand : AsyncCommand<AddHabitCommand.Settings>
+internal sealed class AddHabitCommand : AsyncCommand<AddHabitCommand.Settings>
 {
+    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
+    {
+        var client = CadenceClient.FromEnv();
+
+        // TODO: prompt for scheduled days if not passed via --days
+        var allDays = Enum.GetValues<DayOfWeek>().ToList();
+
+        var request = new CreateHabitRequest(
+            settings.Name,
+            null,
+            settings.Color,
+            null, // will fail until API accepts null
+            allDays);
+
+        throw new NotImplementedException(
+            "API CreateHabitInputDto requires TimeWindow. Make it nullable there first, then remove this throw.");
+    }
+
     public sealed class Settings : CommandSettings
     {
-        [CommandArgument(0, "<name>")]
-        public string Name { get; init; } = "";
+        [CommandArgument(0, "<name>")] public string Name { get; init; } = "";
 
         [CommandOption("-c|--color <color>")]
         [Description("Hex color, e.g. #ff5f00 (default: #6c757d).")]
@@ -21,28 +38,10 @@ sealed class AddHabitCommand : AsyncCommand<AddHabitCommand.Settings>
         // TODO: add --days option to specify scheduled days, e.g. --days mon,tue,wed
         // For now defaults to every day
     }
-
-    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
-    {
-        var client = CadenceClient.FromEnv();
-
-        // TODO: prompt for scheduled days if not passed via --days
-        var allDays = Enum.GetValues<DayOfWeek>().ToList();
-        
-        var request = new CreateHabitRequest(
-            settings.Name,
-            Description: null,
-            settings.Color,
-            TimeWindow: null, // will fail until API accepts null
-            allDays);
-
-        throw new NotImplementedException(
-            "API CreateHabitInputDto requires TimeWindow. Make it nullable there first, then remove this throw.");
-    }
 }
 
 // cx habit archive
-sealed class ArchiveHabitCommand : AsyncCommand
+internal sealed class ArchiveHabitCommand : AsyncCommand
 {
     public override async Task<int> ExecuteAsync(CommandContext context)
     {
@@ -64,7 +63,7 @@ sealed class ArchiveHabitCommand : AsyncCommand
                 .UseConverter(h => h.Name)
                 .AddChoices(habits));
 
-        var confirmed = AnsiConsole.Confirm($"Archive [bold]{habit.Name}[/]?", defaultValue: false);
+        var confirmed = AnsiConsole.Confirm($"Archive [bold]{habit.Name}[/]?", false);
         if (!confirmed) return 0;
 
         await client.ArchiveHabitAsync(habit.Id);

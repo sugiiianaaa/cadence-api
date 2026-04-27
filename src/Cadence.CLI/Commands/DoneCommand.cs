@@ -1,26 +1,16 @@
+using System.ComponentModel;
 using Cadence.CLI.Client;
 using Spectre.Console;
 using Spectre.Console.Cli;
-using System.ComponentModel;
 
 namespace Cadence.CLI.Commands;
 
-sealed class DoneCommand : AsyncCommand<DoneCommand.Settings>
+internal sealed class DoneCommand : AsyncCommand<DoneCommand.Settings>
 {
-    public sealed class Settings : CommandSettings
-    {
-        [CommandArgument(0, "[name]")]
-        [Description("Habit name (partial match). Omit to pick from a list.")]
-        public string? Name { get; init; }
-
-        [CommandOption("--undo")]
-        [Description("Unmark instead of mark.")]
-        public bool Undo { get; init; }
-    }
-
     public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
     {
         var client = CadenceClient.FromEnv();
+
         var habits = await client.GetTodayAsync();
 
         if (habits.Count == 0)
@@ -41,7 +31,7 @@ sealed class DoneCommand : AsyncCommand<DoneCommand.Settings>
             {
                 0 => throw new InvalidOperationException($"No habit matches '{settings.Name}'."),
                 1 => matches[0],
-                _ => PickFromList(matches, "Multiple matches — pick one:"),
+                _ => PickFromList(matches, "Multiple matches — pick one:")
             };
         }
         else
@@ -77,5 +67,16 @@ sealed class DoneCommand : AsyncCommand<DoneCommand.Settings>
                 .Title(title)
                 .UseConverter(h => h.Name)
                 .AddChoices(habits));
+    }
+
+    public sealed class Settings : CommandSettings
+    {
+        [CommandArgument(0, "[name]")]
+        [Description("Habit name (partial match). Omit to pick from a list.")]
+        public string? Name { get; init; }
+
+        [CommandOption("--undo")]
+        [Description("Unmark instead of mark.")]
+        public bool Undo { get; init; }
     }
 }

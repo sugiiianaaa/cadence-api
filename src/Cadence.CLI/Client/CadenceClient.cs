@@ -4,19 +4,19 @@ using System.Text.Json.Serialization;
 
 namespace Cadence.CLI.Client;
 
-sealed class CadenceClient
+internal sealed class CadenceClient
 {
-    private readonly HttpClient _http;
-
     private static readonly JsonSerializerOptions JsonOpts = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        Converters = { new JsonStringEnumConverter() },
+        Converters = { new JsonStringEnumConverter() }
     };
 
-    public CadenceClient(string baseUrl, string apiKey, string timezone)
+    private readonly HttpClient _http;
+
+    private CadenceClient(string baseUrl, string apiKey, string timezone)
     {
-        _http = new HttpClient { BaseAddress = new Uri(baseUrl) };
+        _http = new HttpClient { BaseAddress = new Uri(baseUrl.TrimEnd('/') + '/') };
         _http.DefaultRequestHeaders.Add("x-tkey", apiKey);
         _http.DefaultRequestHeaders.Add("X-Timezone", timezone);
     }
@@ -25,43 +25,65 @@ sealed class CadenceClient
     {
         var baseUrl = Environment.GetEnvironmentVariable("CADENCE_API_URL") ?? "http://localhost:5154";
         var apiKey = Environment.GetEnvironmentVariable("CADENCE_API_KEY")
-            ?? throw new InvalidOperationException("CADENCE_API_KEY environment variable is not set.");
+                     ?? throw new InvalidOperationException("CADENCE_API_KEY environment variable is not set.");
         var timezone = Environment.GetEnvironmentVariable("CADENCE_TIMEZONE")
-            ?? TimeZoneInfo.Local.Id;
+                       ?? TimeZoneInfo.Local.Id;
+
         return new CadenceClient(baseUrl, apiKey, timezone);
     }
 
-    public async Task<List<TodayHabitDto>> GetTodayAsync()
+    public async Task<List<TodayHabitDto>> GetTodayAsync(CancellationToken ct = default)
     {
-        var response = await _http.GetFromJsonAsync<GetTodayHabitsResponse>("/api/habits/today", JsonOpts);
-        return response!.Habits;
+       var res = await _http.GetAsync("api/habits/today", ct);
+       await EnsureSuccessAsync(res);
+       
+       var output = await res.Content.ReadFromJsonAsync<GetTodayHabitsResponse>(JsonOpts, ct);
+       return output?.Habits
+              ?? throw new InvalidOperationException("Unexpected null response from api/habits/today");
     }
 
-    public async Task SetCompletionAsync(long habitId, DateOnly date, bool completed)
+    public async Task SetCompletionAsync(long habitId, DateOnly date, bool completed, CancellationToken ct = default)
     {
         var res = await _http.PutAsJsonAsync(
-            $"/api/habits/{habitId}/completions/{date:yyyy-MM-dd}",
-            new PutCompletionRequest(completed),
-            JsonOpts);
-        res.EnsureSuccessStatusCode();
+            requestUri: $"api/habits/{habitId}/completions/{date:yyyy-MM-dd}",
+            value: new PutCompletionRequest(completed),
+            options: JsonOpts,
+            cancellationToken: ct);
+        await EnsureSuccessAsync(res);
     }
 
-    public async Task<List<HeatmapDayDto>> GetHeatmapAsync(int weeks = 4)
+    public async Task<List<HeatmapDayDto>> GetHeatmapAsync(int weeks = 4, CancellationToken ct = default)
     {
-        var result = await _http.GetFromJsonAsync<List<HeatmapDayDto>>(
-            $"/api/habits/heatmap?weeks={weeks}", JsonOpts);
-        return result!;
+        var res = await _http.GetAsync($"api/habits/heatmap?weeks={weeks}", ct);
+        await EnsureSuccessAsync(res);
+        
+        var output = await res.Content.ReadFromJsonAsync<List<HeatmapDayDto>>(JsonOpts, ct);
+        return output 
+               ??  throw new InvalidOperationException("Unexpected null response from api/habits/heatmap");
     }
 
-    public async Task ArchiveHabitAsync(long habitId)
+    public async Task ArchiveHabitAsync(long habitId, CancellationToken ct = default)
     {
-        var res = await _http.DeleteAsync($"/api/habits/{habitId}");
-        res.EnsureSuccessStatusCode();
+        var res = await _http.DeleteAsync($"api/habits/{habitId}", ct);
+        await EnsureSuccessAsync(res);
     }
 
-    public async Task<List<GetHabitOutputDto>> GetAllHabitsAsync()
+    public async Task<List<GetHabitOutputDto>> GetAllHabitsAsync(CancellationToken ct = default)
     {
-        var result = await _http.GetFromJsonAsync<List<GetHabitOutputDto>>("/api/habits", JsonOpts);
-        return result!;
+        var res = await _http.GetAsync("api/habits", ct);
+        await EnsureSuccessAsync(res);
+        
+        var output = await res.Content.ReadFromJsonAsync<List<GetHabitOutputDto>>(JsonOpts, ct);
+        return output
+            ?? throw new InvalidOperationException("Unexpected null response from api/habits");
+    }
+
+    private static async Task EnsureSuccessAsync(HttpResponseMessage res)
+    {
+        if (!res.IsSuccessStatusCode)
+        {
+            var body = await res.Content.ReadAsStringAsync();
+            throw new InvalidOperationException($"API error {(int)res.StatusCode}: {body}");
+        }
     }
 }
