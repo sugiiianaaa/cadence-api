@@ -8,9 +8,10 @@ public class BadRequestExceptionHandler : IExceptionHandler
     public async ValueTask<bool> TryHandleAsync(
         HttpContext ctx, Exception ex, CancellationToken ct)
     {
-        if (ex is not BadHttpRequestException bad) return false;
+        if (ex is not BadHttpRequestException bad)
+            return false;
 
-        var status = bad.StatusCode == 0 ? StatusCodes.Status400BadRequest : bad.StatusCode;
+        int status = bad.StatusCode == 0 ? StatusCodes.Status400BadRequest : bad.StatusCode;
         ctx.Response.StatusCode = status;
 
         await ctx.Response.WriteAsJsonAsync(new ProblemDetails

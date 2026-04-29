@@ -2,7 +2,7 @@ using Cadence.CLI.Commands;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
-var effectiveArgs = args.Length == 0 ? ["today"] : args;
+string[] effectiveArgs = args.Length == 0 ? ["today"] : args;
 
 var app = new CommandApp();
 

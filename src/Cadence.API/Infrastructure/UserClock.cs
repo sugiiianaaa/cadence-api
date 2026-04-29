@@ -10,7 +10,7 @@ public static class UserClock
             throw new BadHttpRequestException(
                 $"{HeaderName} header is required (IANA, e.g. 'Asia/Jakarta').");
 
-        var id = values[0]!;
+        string id = values[0]!;
         if (!TimeZoneInfo.TryFindSystemTimeZoneById(id, out var tz))
             throw new BadHttpRequestException($"Unknown timezone '{id}'. Use IANA format.");
 

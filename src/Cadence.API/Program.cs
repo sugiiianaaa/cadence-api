@@ -25,7 +25,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    var dbConnected = await db.Database.CanConnectAsync();
+    bool dbConnected = await db.Database.CanConnectAsync();
 
     if (!dbConnected)
         throw new Exception("Could not connect to database");

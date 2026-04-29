@@ -154,7 +154,7 @@ public class StatsRecalculatorTests
         Assert.Equal(4, stats.CurrentStreak);
         Assert.Equal(4, stats.LongestStreak);
     }
-    
+
     [Fact]
     public void Current_streak_counts_to_the_end_of_history_when_no_gap_exists()
     {

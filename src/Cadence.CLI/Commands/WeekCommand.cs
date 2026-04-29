@@ -1,12 +1,12 @@
+using System.ComponentModel;
 using Cadence.CLI.Client;
 using Cadence.CLI.Rendering;
 using Spectre.Console;
 using Spectre.Console.Cli;
-using System.ComponentModel;
 
 namespace Cadence.CLI.Commands;
 
-sealed class WeekCommand : AsyncCommand<WeekCommand.Settings>
+internal sealed class WeekCommand : AsyncCommand<WeekCommand.Settings>
 {
     public sealed class Settings : CommandSettings
     {
@@ -66,8 +66,8 @@ sealed class WeekCommand : AsyncCommand<WeekCommand.Settings>
         var result = new List<HeatmapDayDto>(weeks * 7);
         for (var d = from; d <= today; d = d.AddDays(1))
         {
-            var scheduled = scheduledDays.Contains(d.DayOfWeek) ? 1 : 0;
-            var completed = habit.RecentCompletions.Contains(d) ? 1 : 0;
+            int scheduled = scheduledDays.Contains(d.DayOfWeek) ? 1 : 0;
+            int completed = habit.RecentCompletions.Contains(d) ? 1 : 0;
             result.Add(new HeatmapDayDto(d, completed, scheduled));
         }
         return result;

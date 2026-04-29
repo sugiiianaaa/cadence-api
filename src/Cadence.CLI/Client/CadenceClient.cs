@@ -23,10 +23,10 @@ internal sealed class CadenceClient
 
     public static CadenceClient FromEnv()
     {
-        var baseUrl = Environment.GetEnvironmentVariable("CADENCE_API_URL") ?? "http://localhost:5154";
-        var apiKey = Environment.GetEnvironmentVariable("CADENCE_API_KEY")
+        string baseUrl = Environment.GetEnvironmentVariable("CADENCE_API_URL") ?? "http://localhost:5154";
+        string apiKey = Environment.GetEnvironmentVariable("CADENCE_API_KEY")
                      ?? throw new InvalidOperationException("CADENCE_API_KEY environment variable is not set.");
-        var timezone = Environment.GetEnvironmentVariable("CADENCE_TIMEZONE")
+        string timezone = Environment.GetEnvironmentVariable("CADENCE_TIMEZONE")
                        ?? TimeZoneInfo.Local.Id;
 
         return new CadenceClient(baseUrl, apiKey, timezone);
@@ -34,12 +34,12 @@ internal sealed class CadenceClient
 
     public async Task<List<TodayHabitDto>> GetTodayAsync(CancellationToken ct = default)
     {
-       var res = await _http.GetAsync("api/habits/today", ct);
-       await EnsureSuccessAsync(res);
-       
-       var output = await res.Content.ReadFromJsonAsync<GetTodayHabitsResponse>(JsonOpts, ct);
-       return output?.Habits
-              ?? throw new InvalidOperationException("Unexpected null response from api/habits/today");
+        var res = await _http.GetAsync("api/habits/today", ct);
+        await EnsureSuccessAsync(res);
+
+        var output = await res.Content.ReadFromJsonAsync<GetTodayHabitsResponse>(JsonOpts, ct);
+        return output?.Habits
+               ?? throw new InvalidOperationException("Unexpected null response from api/habits/today");
     }
 
     public async Task SetCompletionAsync(long habitId, DateOnly date, bool completed, CancellationToken ct = default)
@@ -56,10 +56,10 @@ internal sealed class CadenceClient
     {
         var res = await _http.GetAsync($"api/habits/heatmap?weeks={weeks}", ct);
         await EnsureSuccessAsync(res);
-        
+
         var output = await res.Content.ReadFromJsonAsync<List<HeatmapDayDto>>(JsonOpts, ct);
-        return output 
-               ??  throw new InvalidOperationException("Unexpected null response from api/habits/heatmap");
+        return output
+               ?? throw new InvalidOperationException("Unexpected null response from api/habits/heatmap");
     }
 
     public async Task ArchiveHabitAsync(long habitId, CancellationToken ct = default)
@@ -72,7 +72,7 @@ internal sealed class CadenceClient
     {
         var res = await _http.GetAsync("api/habits", ct);
         await EnsureSuccessAsync(res);
-        
+
         var output = await res.Content.ReadFromJsonAsync<List<GetHabitOutputDto>>(JsonOpts, ct);
         return output
             ?? throw new InvalidOperationException("Unexpected null response from api/habits");
@@ -82,7 +82,7 @@ internal sealed class CadenceClient
     {
         if (!res.IsSuccessStatusCode)
         {
-            var body = await res.Content.ReadAsStringAsync();
+            string body = await res.Content.ReadAsStringAsync();
             throw new InvalidOperationException($"API error {(int)res.StatusCode}: {body}");
         }
     }

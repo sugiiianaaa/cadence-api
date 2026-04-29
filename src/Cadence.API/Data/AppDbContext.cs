@@ -7,7 +7,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 {
     public DbSet<Habit> Habits => Set<Habit>();
     public DbSet<Completion> Completions => Set<Completion>();
-    public DbSet<HabitStats>  HabitStats => Set<HabitStats>();
+    public DbSet<HabitStats> HabitStats => Set<HabitStats>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

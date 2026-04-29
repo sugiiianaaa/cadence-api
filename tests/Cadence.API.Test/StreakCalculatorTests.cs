@@ -13,7 +13,7 @@ public class StreakCalculatorTests
     {
         var today = new DateOnly(2026, 4, 17);
 
-        var streak = StreakCalculator.Compute(
+        int streak = StreakCalculator.Compute(
             completions: [],
             scheduledDays: EveryDay,
             today: today);
@@ -32,7 +32,7 @@ public class StreakCalculatorTests
             new(2026, 4, 17),
         ];
 
-        var streak = StreakCalculator.Compute(completions, EveryDay, today);
+        int streak = StreakCalculator.Compute(completions, EveryDay, today);
 
         Assert.Equal(3, streak);
     }
@@ -50,7 +50,7 @@ public class StreakCalculatorTests
             new(2026, 4, 17),
         ];
 
-        var streak = StreakCalculator.Compute(completions, EveryDay, today);
+        int streak = StreakCalculator.Compute(completions, EveryDay, today);
 
         Assert.Equal(2, streak);
     }
@@ -66,7 +66,7 @@ public class StreakCalculatorTests
             new(2026, 4, 17), // Fri
         ];
 
-        var streak = StreakCalculator.Compute(completions, MonWedFri, today);
+        int streak = StreakCalculator.Compute(completions, MonWedFri, today);
 
         Assert.Equal(3, streak);
     }
@@ -83,7 +83,7 @@ public class StreakCalculatorTests
             new(2026, 1, 2),
         ];
 
-        var streak = StreakCalculator.Compute(completions, EveryDay, today);
+        int streak = StreakCalculator.Compute(completions, EveryDay, today);
 
         Assert.Equal(4, streak);
     }
@@ -99,7 +99,7 @@ public class StreakCalculatorTests
             // today not yet completed
         ];
 
-        var streak = StreakCalculator.Compute(completions, EveryDay, today);
+        int streak = StreakCalculator.Compute(completions, EveryDay, today);
 
         Assert.Equal(2, streak);
     }
@@ -116,7 +116,7 @@ public class StreakCalculatorTests
             // today not yet completed
         ];
 
-        var streak = StreakCalculator.Compute(completions, EveryDay, today);
+        int streak = StreakCalculator.Compute(completions, EveryDay, today);
 
         Assert.Equal(0, streak);
     }
@@ -137,7 +137,7 @@ public class StreakCalculatorTests
             new(2026, 4, 17),
         ];
 
-        var streak = StreakCalculator.Compute(completions, EveryDay, today);
+        int streak = StreakCalculator.Compute(completions, EveryDay, today);
 
         Assert.Equal(2, streak);
     }
@@ -147,7 +147,7 @@ public class StreakCalculatorTests
     {
         var today = new DateOnly(2026, 4, 17);
 
-        var streak = StreakCalculator.Compute(
+        int streak = StreakCalculator.Compute(
             completions: [today],
             scheduledDays: [],
             today: today);

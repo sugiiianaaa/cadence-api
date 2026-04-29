@@ -22,23 +22,24 @@ public static class StatsRecalculator
     {
         var valid = completions.Where(d => scheduledDays.Contains(d.DayOfWeek)).ToHashSet();
 
-        var total = valid.Count;
+        int total = valid.Count;
         var last = total == 0 ? (DateOnly?)null : valid.Max();
-        var current = StreakCalculator.Compute(valid, scheduledDays, today);
-        var longest = ComputeLongestRun(valid, scheduledDays);
+        int current = StreakCalculator.Compute(valid, scheduledDays, today);
+        int longest = ComputeLongestRun(valid, scheduledDays);
 
         return new HabitStatsSnapshot(current, longest, total, last);
     }
 
     private static int ComputeLongestRun(HashSet<DateOnly> completions, HashSet<DayOfWeek> scheduledDays)
     {
-        if (completions.Count == 0 || scheduledDays.Count == 0) return 0;
+        if (completions.Count == 0 || scheduledDays.Count == 0)
+            return 0;
 
         var sorted = completions.OrderBy(d => d).ToList();
-        var longest = 1;
-        var run = 1;
+        int longest = 1;
+        int run = 1;
 
-        for (var i = 1; i < sorted.Count; i++)
+        for (int i = 1; i < sorted.Count; i++)
         {
             run = HasMissedScheduledDayBetween(sorted[i - 1], sorted[i], scheduledDays)
                 ? 1

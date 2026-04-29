@@ -21,10 +21,14 @@ internal static class PatchHabit
         if (habit is null)
             return TypedResults.Problem(detail: $"Habit {habitId} not found.", statusCode: 404);
 
-        if (input.Name != null) habit.Name = input.Name;
-        if (input.Color != null) habit.Color = input.Color;
-        if (input.ScheduledDays != null) habit.ScheduledDays = input.ScheduledDays;
-        if (input.Description != null) habit.Description = input.Description;
+        if (input.Name != null)
+            habit.Name = input.Name;
+        if (input.Color != null)
+            habit.Color = input.Color;
+        if (input.ScheduledDays != null)
+            habit.ScheduledDays = input.ScheduledDays;
+        if (input.Description != null)
+            habit.Description = input.Description;
         if (input.TimeWindow != null)
         {
             habit.StartTime = input.TimeWindow.Start;

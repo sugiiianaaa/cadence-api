@@ -63,8 +63,9 @@ internal sealed class ArchiveHabitCommand : AsyncCommand
                 .UseConverter(h => h.Name)
                 .AddChoices(habits));
 
-        var confirmed = AnsiConsole.Confirm($"Archive [bold]{habit.Name}[/]?", false);
-        if (!confirmed) return 0;
+        bool confirmed = AnsiConsole.Confirm($"Archive [bold]{habit.Name}[/]?", false);
+        if (!confirmed)
+            return 0;
 
         await client.ArchiveHabitAsync(habit.Id);
         AnsiConsole.MarkupLine($"[grey]{habit.Name} archived.[/]");

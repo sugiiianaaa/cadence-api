@@ -12,9 +12,10 @@ public static class StreakCalculator
         HashSet<DayOfWeek> scheduledDays,
         DateOnly today)
     {
-        if (scheduledDays.Count == 0) return 0;
+        if (scheduledDays.Count == 0)
+            return 0;
 
-        var streak = 0;
+        int streak = 0;
         var current = today;
         var floor = today.AddYears(-3);
 

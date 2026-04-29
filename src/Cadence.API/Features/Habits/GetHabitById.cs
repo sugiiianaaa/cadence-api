@@ -33,7 +33,7 @@ internal static class GetHabitById
             Description: habit.Description,
             Color: habit.Color,
             ScheduledDays: habit.ScheduledDays.Select(d => d.ToString()).ToList(),
-            TimeWindow:new TimeWindow(habit.StartTime, habit.EndTime),
+            TimeWindow: new TimeWindow(habit.StartTime, habit.EndTime),
             CreatedAt: habit.CreatedAt,
             IsArchived: habit.IsArchived));
     }

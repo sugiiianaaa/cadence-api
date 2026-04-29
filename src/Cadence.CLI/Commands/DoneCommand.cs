@@ -42,7 +42,7 @@ internal sealed class DoneCommand : AsyncCommand<DoneCommand.Settings>
 
             if (candidates.Count == 0)
             {
-                var msg = settings.Undo ? "Nothing marked done yet." : "Everything's done for today.";
+                string msg = settings.Undo ? "Nothing marked done yet." : "Everything's done for today.";
                 AnsiConsole.MarkupLine($"[grey]{msg}[/]");
                 return 0;
             }
@@ -55,7 +55,7 @@ internal sealed class DoneCommand : AsyncCommand<DoneCommand.Settings>
         var today = DateOnly.FromDateTime(DateTime.Today);
         await client.SetCompletionAsync(habit.Id, today, !settings.Undo);
 
-        var verb = settings.Undo ? "Unmarked" : "Done";
+        string verb = settings.Undo ? "Unmarked" : "Done";
         AnsiConsole.MarkupLine($"[green]{verb}:[/] {habit.Name}");
         return 0;
     }

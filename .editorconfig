@@ -1,0 +1,110 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.cs]
+
+# ── Indentation ────────────────────────────────────────────────
+indent_style = space
+indent_size = 4
+
+# ── Line length ────────────────────────────────────────────────
+# Not enforced by Roslyn natively, but respected by some linters
+max_line_length = 120
+
+# ── Blank lines ────────────────────────────────────────────────
+csharp_style_allow_blank_lines_between_consecutive_braces_experimental = false:warning
+csharp_style_allow_blank_line_before_close_brace_experimental = false:warning
+
+# ── Braces ─────────────────────────────────────────────────────
+csharp_new_line_before_open_brace = all           # Allman style
+csharp_new_line_before_else = true
+csharp_new_line_before_catch = true
+csharp_new_line_before_finally = true
+csharp_new_line_before_members_in_object_initializers = true
+csharp_new_line_before_members_in_anonymous_types = true
+
+# ── Spacing ────────────────────────────────────────────────────
+csharp_space_after_cast = false                   # (int)x not (int) x
+csharp_space_before_colon_in_inheritance_clause = true
+csharp_space_after_colon_in_inheritance_clause = true
+csharp_space_around_binary_operators = before_and_after
+
+# ── Wrapping ───────────────────────────────────────────────────
+csharp_preserve_single_line_statements = false    # forces if/while bodies onto new line
+csharp_preserve_single_line_blocks = true
+
+# ── var vs explicit type ────────────────────────────────────────
+# This is the most readability-impactful setting.
+# "when_variable_type_is_apparent" = use var only when the RHS makes the type obvious
+csharp_style_var_for_built_in_types = false:warning          # int x not var x
+csharp_style_var_when_type_is_apparent = true:suggestion     # var x = new Customer()
+csharp_style_var_elsewhere = false:warning                   # explicit when not obvious
+
+# ── Expression-bodied members ──────────────────────────────────
+# Good for trivial getters/single-expression methods, noise for anything complex
+csharp_style_expression_bodied_methods = when_on_single_line:suggestion
+csharp_style_expression_bodied_properties = true:suggestion
+csharp_style_expression_bodied_constructors = false:warning  # ctors need clarity
+
+# ── Pattern matching ───────────────────────────────────────────
+csharp_style_prefer_pattern_matching = true:suggestion
+csharp_style_prefer_null_check_over_type_check = true:suggestion  # x is null not x == null
+
+# ── Null handling ──────────────────────────────────────────────
+csharp_style_prefer_null_coalescing_assignment = true:suggestion  # x ??= default
+dotnet_style_coalesce_expression = true:suggestion                # x ?? y
+dotnet_style_null_propagation = true:suggestion                   # x?.y
+
+# ── Unnecessary code ───────────────────────────────────────────
+dotnet_style_prefer_simplified_boolean_expressions = true:warning  # x == true → x
+csharp_style_unused_value_assignment_preference = discard_variable:suggestion
+dotnet_remove_unnecessary_suppression_exclusions = none
+
+# ── this. qualifier ────────────────────────────────────────────
+dotnet_style_qualification_for_field = false:warning    # no this.field
+dotnet_style_qualification_for_property = false:warning
+dotnet_style_qualification_for_method = false:warning
+dotnet_style_qualification_for_event = false:warning
+
+# ── Language keywords over BCL types ──────────────────────────
+dotnet_style_predefined_type_for_locals_parameters_members = true:warning  # int not Int32
+dotnet_style_predefined_type_for_member_access = true:warning              # int.Parse not Int32.Parse
+
+# ── Object/collection initializers ────────────────────────────
+dotnet_style_object_initializer = true:suggestion
+dotnet_style_collection_initializer = true:suggestion
+
+# ── Modifier ordering ──────────────────────────────────────────
+csharp_preferred_modifier_order = public,private,protected,internal,static,extern,new,virtual,abstract,sealed,override,readonly,unsafe,volatile,async:warning
+
+# ── Accessibility modifiers ────────────────────────────────────
+dotnet_style_require_accessibility_modifiers = always:warning   # explicit public/private everywhere
+
+# ── Naming conventions ─────────────────────────────────────────
+dotnet_naming_rule.interfaces_must_start_with_i.symbols = interfaces
+dotnet_naming_rule.interfaces_must_start_with_i.style = prefix_i
+dotnet_naming_rule.interfaces_must_start_with_i.severity = warning
+
+dotnet_naming_symbols.interfaces.applicable_kinds = interface
+
+dotnet_naming_style.prefix_i.required_prefix = I
+dotnet_naming_style.prefix_i.capitalization = pascal_case
+
+dotnet_naming_rule.private_fields_underscore.symbols = private_fields
+dotnet_naming_rule.private_fields_underscore.style = underscore_prefix
+dotnet_naming_rule.private_fields_underscore.severity = warning
+
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+
+dotnet_naming_style.underscore_prefix.required_prefix = _
+dotnet_naming_style.underscore_prefix.capitalization = camel_case
+
+# ── Using directives ───────────────────────────────────────────
+dotnet_sort_system_directives_first = true
+csharp_using_directive_placement = outside_namespace:warning

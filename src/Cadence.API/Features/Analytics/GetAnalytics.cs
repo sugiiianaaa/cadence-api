@@ -34,7 +34,7 @@ internal static class GetAnalytics
         HttpContext ctx, AppDbContext db, string? period = null)
     {
         var today = UserClock.TodayFor(ctx);
-        var normalized = (period ?? "month").ToLowerInvariant();
+        string normalized = (period ?? "month").ToLowerInvariant();
 
         if (!TryGetPeriodStart(normalized, today, out var periodStart))
             return TypedResults.Problem(
@@ -42,7 +42,7 @@ internal static class GetAnalytics
                 statusCode: 400);
 
         var periodEnd = today;
-        var periodLength = periodEnd.DayNumber - periodStart.DayNumber + 1;
+        int periodLength = periodEnd.DayNumber - periodStart.DayNumber + 1;
         var prevPeriodEnd = periodStart.AddDays(-1);
         var prevPeriodStart = prevPeriodEnd.AddDays(-(periodLength - 1));
 
@@ -67,10 +67,10 @@ internal static class GetAnalytics
             var completions = h.Completions.ToHashSet();
             var currentOcc = EnumerateScheduledDates(h.ScheduledDays, periodStart, periodEnd);
             var prevOcc = EnumerateScheduledDates(h.ScheduledDays, prevPeriodStart, prevPeriodEnd);
-            var currentComp = currentOcc.Count(d => completions.Contains(d));
-            var prevComp = prevOcc.Count(d => completions.Contains(d));
-            var currentRate = Rate(currentOcc.Count, currentComp);
-            var prevRate = Rate(prevOcc.Count, prevComp);
+            int currentComp = currentOcc.Count(d => completions.Contains(d));
+            int prevComp = prevOcc.Count(d => completions.Contains(d));
+            decimal? currentRate = Rate(currentOcc.Count, currentComp);
+            decimal? prevRate = Rate(prevOcc.Count, prevComp);
             return new
             {
                 h.Id,
@@ -97,9 +97,9 @@ internal static class GetAnalytics
             NeedsAttention: p.CurrentRate is < 0.5m && p.Trend is < -0.05m
         )).ToList();
 
-        var overallRate = Rate(perHabit.Sum(p => p.CurrentOccCount), perHabit.Sum(p => p.CurrentComp));
-        var prevOverallRate = Rate(perHabit.Sum(p => p.PrevOccCount), perHabit.Sum(p => p.PrevComp));
-        var overallTrend = Delta(overallRate, prevOverallRate);
+        decimal? overallRate = Rate(perHabit.Sum(p => p.CurrentOccCount), perHabit.Sum(p => p.CurrentComp));
+        decimal? prevOverallRate = Rate(perHabit.Sum(p => p.PrevOccCount), perHabit.Sum(p => p.PrevComp));
+        decimal? overallTrend = Delta(overallRate, prevOverallRate);
 
         DayOfWeek[] mondayFirst =
         [
@@ -115,9 +115,10 @@ internal static class GetAnalytics
         {
             var datesForDow = periodDays.Where(d => d.DayOfWeek == dow).ToList();
             var habitsOnDow = perHabit.Where(p => p.ScheduledDays.Contains(dow)).ToList();
-            var totalOcc = datesForDow.Count * habitsOnDow.Count;
-            if (totalOcc == 0) return new AnalyticWeekdayProfile(dow, null);
-            var totalComp = habitsOnDow.Sum(p => datesForDow.Count(d => p.Completions.Contains(d)));
+            int totalOcc = datesForDow.Count * habitsOnDow.Count;
+            if (totalOcc == 0)
+                return new AnalyticWeekdayProfile(dow, null);
+            int totalComp = habitsOnDow.Sum(p => datesForDow.Count(d => p.Completions.Contains(d)));
             return new AnalyticWeekdayProfile(dow, (decimal)totalComp / totalOcc);
         }).ToList();
 
@@ -136,14 +137,14 @@ internal static class GetAnalytics
         switch (period)
         {
             case "week":
-                var offsetFromMonday = ((int)today.DayOfWeek + 6) % 7;
+                int offsetFromMonday = ((int)today.DayOfWeek + 6) % 7;
                 start = today.AddDays(-offsetFromMonday);
                 return true;
             case "month":
                 start = new DateOnly(today.Year, today.Month, 1);
                 return true;
             case "quarter":
-                var quarterStartMonth = ((today.Month - 1) / 3) * 3 + 1;
+                int quarterStartMonth = ((today.Month - 1) / 3) * 3 + 1;
                 start = new DateOnly(today.Year, quarterStartMonth, 1);
                 return true;
             default:
@@ -186,11 +187,13 @@ internal static class GetAnalytics
         var timeline = EnumerateScheduledDates(scheduledDays, periodStart, horizon);
 
         var gaps = new List<int>();
-        for (var i = 0; i < timeline.Count; i++)
+        for (int i = 0; i < timeline.Count; i++)
         {
-            if (timeline[i] > periodEnd) break;
-            if (completions.Contains(timeline[i])) continue;
-            for (var j = i + 1; j < timeline.Count; j++)
+            if (timeline[i] > periodEnd)
+                break;
+            if (completions.Contains(timeline[i]))
+                continue;
+            for (int j = i + 1; j < timeline.Count; j++)
             {
                 if (completions.Contains(timeline[j]))
                 {

@@ -11,7 +11,8 @@ internal static class GetHeatmap
 {
     public static async Task<Ok<List<HeatmapDayDto>>> Handle(int weeks, HttpContext ctx, AppDbContext db)
     {
-        if (weeks < 1) weeks = 16;
+        if (weeks < 1)
+            weeks = 16;
 
         var today = UserClock.TodayFor(ctx);
         var from = today.AddDays(-(weeks * 7 - 1));
@@ -34,8 +35,8 @@ internal static class GetHeatmap
         while (current <= today)
         {
             var dow = current.DayOfWeek;
-            var total = habits.Count(h => h.ScheduledDays.Contains(dow));
-            var completed = habits.Sum(h => h.Completions.Contains(current) ? 1 : 0);
+            int total = habits.Count(h => h.ScheduledDays.Contains(dow));
+            int completed = habits.Sum(h => h.Completions.Contains(current) ? 1 : 0);
 
             result.Add(new HeatmapDayDto(current, completed, total));
             current = current.AddDays(1);

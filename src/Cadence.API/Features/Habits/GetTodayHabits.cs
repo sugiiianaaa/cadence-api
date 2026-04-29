@@ -59,20 +59,23 @@ internal static class GetTodayHabits
         HashSet<DayOfWeek> scheduledDays,
         DateOnly today)
     {
-        if (lastCompletedDate is null) return 0;
+        if (lastCompletedDate is null)
+            return 0;
 
         var lastRequired = MostRecentPastScheduledDay(today, scheduledDays);
-        if (lastRequired is not null && lastCompletedDate < lastRequired) return 0;
+        if (lastRequired is not null && lastCompletedDate < lastRequired)
+            return 0;
 
         return storedStreak;
     }
 
     private static DateOnly? MostRecentPastScheduledDay(DateOnly today, HashSet<DayOfWeek> scheduledDays)
     {
-        for (var i = 1; i <= 7; i++)
+        for (int i = 1; i <= 7; i++)
         {
             var d = today.AddDays(-i);
-            if (scheduledDays.Contains(d.DayOfWeek)) return d;
+            if (scheduledDays.Contains(d.DayOfWeek))
+                return d;
         }
         return null;
     }

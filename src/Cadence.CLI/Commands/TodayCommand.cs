@@ -4,7 +4,7 @@ using Spectre.Console.Cli;
 
 namespace Cadence.CLI.Commands;
 
-sealed class TodayCommand : AsyncCommand
+internal sealed class TodayCommand : AsyncCommand
 {
     public override async Task<int> ExecuteAsync(CommandContext context)
     {
@@ -34,8 +34,9 @@ sealed class TodayCommand : AsyncCommand
         var today = DateOnly.FromDateTime(DateTime.Today);
         var tasks = habits.Select(h =>
         {
-            var shouldBeCompleted = selected.Contains(h);
-            if (shouldBeCompleted == h.IsCompleted) return Task.CompletedTask;
+            bool shouldBeCompleted = selected.Contains(h);
+            if (shouldBeCompleted == h.IsCompleted)
+                return Task.CompletedTask;
             return client.SetCompletionAsync(h.Id, today, shouldBeCompleted);
         });
 
@@ -48,10 +49,10 @@ sealed class TodayCommand : AsyncCommand
 
     private static string FormatHabit(TodayHabitDto h)
     {
-        var window = h.TimeWindow is not null
+        string window = h.TimeWindow is not null
             ? $" [grey]{h.TimeWindow.Start:HH\\:mm}–{h.TimeWindow.End:HH\\:mm}[/]"
             : "";
-        var streak = h.Streak > 0 ? $" [grey]·{h.Streak}[/]" : "";
+        string streak = h.Streak > 0 ? $" [grey]·{h.Streak}[/]" : "";
         return $"[{h.Color}]●[/] {h.Name}{window}{streak}";
     }
 }

@@ -6,7 +6,7 @@ public class ApiKeyMiddleware(RequestDelegate next, IConfiguration config)
 
     public async Task InvokeAsync(HttpContext context)
     {
-        var path = context.Request.Path.Value ?? string.Empty;
+        string path = context.Request.Path.Value ?? string.Empty;
 
         if (PublicPaths.Any(p => path.StartsWith(p, StringComparison.OrdinalIgnoreCase)))
         {
