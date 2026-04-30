@@ -11,7 +11,7 @@ internal sealed class DoneCommand : AsyncCommand<DoneCommand.Settings>
     {
         var client = CadenceClient.FromEnv();
 
-        var habits = await client.GetTodayAsync();
+        List<TodayHabitDto> habits = await client.GetTodayAsync();
 
         if (habits.Count == 0)
         {
@@ -36,7 +36,7 @@ internal sealed class DoneCommand : AsyncCommand<DoneCommand.Settings>
         }
         else
         {
-            var candidates = settings.Undo
+            List<TodayHabitDto> candidates = settings.Undo
                 ? habits.Where(h => h.IsCompleted).ToList()
                 : habits.Where(h => !h.IsCompleted).ToList();
 

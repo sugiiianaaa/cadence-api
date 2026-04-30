@@ -14,7 +14,7 @@ internal static class WeekGrid
             return;
 
         // Pad to full week boundary at the start
-        var first = days[0].Date;
+        DateOnly first = days[0].Date;
         int startPad = (int)first.DayOfWeek; // 0 = Sunday
         var padded = Enumerable
             .Repeat<HeatmapDayDto?>(null, startPad)
@@ -30,7 +30,7 @@ internal static class WeekGrid
 
         for (int i = 0; i < padded.Count; i += 7)
         {
-            var week = padded.Skip(i).Take(7);
+            IEnumerable<HeatmapDayDto?> week = padded.Skip(i).Take(7);
             var cells = week.Select(d => d is null ? "    " : Cell(d)).ToList();
             AnsiConsole.MarkupLine(string.Join(" ", cells));
         }

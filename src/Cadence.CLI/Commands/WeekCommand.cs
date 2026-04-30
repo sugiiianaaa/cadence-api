@@ -26,12 +26,12 @@ internal sealed class WeekCommand : AsyncCommand<WeekCommand.Settings>
 
         if (settings.Name is not null)
         {
-            var habits = await client.GetAllHabitsAsync();
+            List<GetHabitOutputDto> habits = await client.GetAllHabitsAsync();
             var matches = habits
                 .Where(h => h.Name.Contains(settings.Name, StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
-            var habit = matches.Count switch
+            GetHabitOutputDto habit = matches.Count switch
             {
                 0 => throw new InvalidOperationException($"No habit matches '{settings.Name}'."),
                 1 => matches[0],
@@ -47,7 +47,7 @@ internal sealed class WeekCommand : AsyncCommand<WeekCommand.Settings>
         }
         else
         {
-            var heatmap = await client.GetHeatmapAsync(settings.Weeks);
+            List<HeatmapDayDto> heatmap = await client.GetHeatmapAsync(settings.Weeks);
             AnsiConsole.MarkupLine("[bold]All habits[/]");
             WeekGrid.Render(heatmap);
         }
@@ -58,13 +58,13 @@ internal sealed class WeekCommand : AsyncCommand<WeekCommand.Settings>
     private static List<HeatmapDayDto> BuildHabitHeatmap(GetHabitOutputDto habit, int weeks)
     {
         var today = DateOnly.FromDateTime(DateTime.Today);
-        var from = today.AddDays(-(weeks * 7 - 1));
+        DateOnly from = today.AddDays(-(weeks * 7 - 1));
         var scheduledDays = habit.ScheduledDays
             .Select(d => Enum.Parse<DayOfWeek>(d))
             .ToHashSet();
 
         var result = new List<HeatmapDayDto>(weeks * 7);
-        for (var d = from; d <= today; d = d.AddDays(1))
+        for (DateOnly d = from; d <= today; d = d.AddDays(1))
         {
             int scheduled = scheduledDays.Contains(d.DayOfWeek) ? 1 : 0;
             int completed = habit.RecentCompletions.Contains(d) ? 1 : 0;

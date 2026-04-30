@@ -4,7 +4,6 @@ public class Habit
 {
     public long Id { get; init; }
     public required string Name { get; set; }
-    public string? Description { get; set; }
     public required string Color { get; set; }
     public DayOfWeek[] ScheduledDays { get; set; } = [];
     public TimeOnly StartTime { get; set; }

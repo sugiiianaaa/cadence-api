@@ -1,8 +1,8 @@
 namespace Cadence.CLI.Client;
 
-internal record GetTodayHabitsResponse(List<TodayHabitDto> Habits);
+internal sealed record GetTodayHabitsResponse(List<TodayHabitDto> Habits);
 
-internal record TodayHabitDto(
+internal sealed record TodayHabitDto(
     long Id,
     string Name,
     string Color,
@@ -10,13 +10,13 @@ internal record TodayHabitDto(
     int Streak,
     TimeWindowDto? TimeWindow);
 
-internal record TimeWindowDto(TimeOnly Start, TimeOnly End);
+internal sealed record TimeWindowDto(TimeOnly Start, TimeOnly End);
 
-internal record HeatmapDayDto(DateOnly Date, int Completed, int Total);
+internal sealed record HeatmapDayDto(DateOnly Date, int Completed, int Total);
 
-internal record PutCompletionRequest(bool Completed);
+internal sealed record PutCompletionRequest(bool Completed);
 
-internal record GetHabitOutputDto(
+internal sealed record GetHabitOutputDto(
     long Id,
     string Name,
     string Color,
@@ -24,9 +24,8 @@ internal record GetHabitOutputDto(
     List<string> ScheduledDays,
     List<DateOnly> RecentCompletions);
 
-internal record CreateHabitRequest(
+internal sealed record CreateHabitRequest(
     string Name,
-    string? Description,
     string Color,
     TimeWindowDto TimeWindow,
     List<DayOfWeek> ScheduledDays);

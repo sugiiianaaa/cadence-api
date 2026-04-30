@@ -12,31 +12,43 @@ internal sealed class AddHabitCommand : AsyncCommand<AddHabitCommand.Settings>
     {
         var client = CadenceClient.FromEnv();
 
-        // TODO: prompt for scheduled days if not passed via --days
-        var allDays = Enum.GetValues<DayOfWeek>().ToList();
-
         var request = new CreateHabitRequest(
             settings.Name,
-            null,
             settings.Color,
-            null, // will fail until API accepts null
-            allDays);
+            new TimeWindowDto(settings.StartTime, settings.EndTime),
+            settings.Days);
 
-        throw new NotImplementedException(
-            "API CreateHabitInputDto requires TimeWindow. Make it nullable there first, then remove this throw.");
+        long habitId = await client.CreateHabitAsync(request);
+
+        AnsiConsole.MarkupLine($"[green]Created habit #{habitId}[/]");
+
+        return 0;
     }
 
     public sealed class Settings : CommandSettings
     {
-        [CommandArgument(0, "<name>")] public string Name { get; init; } = "";
+        [CommandArgument(0, "<name>")]
+        public string Name { get; init; } = "";
 
         [CommandOption("-c|--color <color>")]
         [Description("Hex color, e.g. #ff5f00 (default: #6c757d).")]
         [DefaultValue("#6c757d")]
         public string Color { get; init; } = "#6c757d";
 
-        // TODO: add --days option to specify scheduled days, e.g. --days mon,tue,wed
-        // For now defaults to every day
+        [CommandOption("-d|--days <days>")]
+        [Description("Comma-separated days 0–6 (Sun=0), e.g. 0,1,2")]
+        [TypeConverter(typeof(DayOfWeekListConverter))]
+        public List<DayOfWeek> Days { get; init; } = [];
+
+        [CommandOption("-s|--start-time <start>")]
+        [Description("Start time, e.g. 06:00 or 06.00")]
+        [TypeConverter(typeof(TimeOnlyConverter))]
+        public TimeOnly StartTime { get; init; } = new TimeOnly(6, 0);
+
+        [CommandOption("-e|--end-time <end>")]
+        [Description("End time, e.g. 07:00 or 07.00")]
+        [TypeConverter(typeof(TimeOnlyConverter))]
+        public TimeOnly EndTime { get; init; } = new TimeOnly(6, 30);
     }
 }
 
@@ -47,9 +59,7 @@ internal sealed class ArchiveHabitCommand : AsyncCommand
     {
         var client = CadenceClient.FromEnv();
 
-        // TODO: GetAllHabitsAsync doesn't exist yet — implement CadenceClient.GetAllHabitsAsync()
-        // by checking the GET /api/habits response shape in GetHabits.cs
-        var habits = await client.GetTodayAsync(); // placeholder — only shows today's habits
+        List<GetHabitOutputDto> habits = await client.GetAllHabitsAsync();
 
         if (habits.Count == 0)
         {
@@ -57,8 +67,8 @@ internal sealed class ArchiveHabitCommand : AsyncCommand
             return 0;
         }
 
-        var habit = AnsiConsole.Prompt(
-            new SelectionPrompt<TodayHabitDto>()
+        GetHabitOutputDto habit = AnsiConsole.Prompt(
+            new SelectionPrompt<GetHabitOutputDto>()
                 .Title("Archive which habit? [red](irreversible)[/]")
                 .UseConverter(h => h.Name)
                 .AddChoices(habits));

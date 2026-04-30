@@ -9,7 +9,7 @@ internal sealed class TodayCommand : AsyncCommand
     public override async Task<int> ExecuteAsync(CommandContext context)
     {
         var client = CadenceClient.FromEnv();
-        var habits = await client.GetTodayAsync();
+        List<TodayHabitDto> habits = await client.GetTodayAsync();
 
         if (habits.Count == 0)
         {
@@ -17,22 +17,22 @@ internal sealed class TodayCommand : AsyncCommand
             return 0;
         }
 
-        var prompt = new MultiSelectionPrompt<TodayHabitDto>()
+        MultiSelectionPrompt<TodayHabitDto> prompt = new MultiSelectionPrompt<TodayHabitDto>()
             .Title("Today's habits [grey](space to toggle, enter to save)[/]")
             .NotRequired()
             .UseConverter(h => FormatHabit(h));
 
-        foreach (var habit in habits)
+        foreach (TodayHabitDto habit in habits)
         {
             prompt.AddChoice(habit);
             if (habit.IsCompleted)
                 prompt.Select(habit);
         }
 
-        var selected = AnsiConsole.Prompt(prompt);
+        List<TodayHabitDto> selected = AnsiConsole.Prompt(prompt);
 
-        var today = DateOnly.FromDateTime(DateTime.Today);
-        var tasks = habits.Select(h =>
+        DateOnly today = DateOnly.FromDateTime(DateTime.Today);
+        IEnumerable<Task> tasks = habits.Select(h =>
         {
             bool shouldBeCompleted = selected.Contains(h);
             if (shouldBeCompleted == h.IsCompleted)

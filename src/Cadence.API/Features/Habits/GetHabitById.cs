@@ -8,7 +8,6 @@ namespace Cadence.API.Features.Habits;
 public record GetHabitByIdOutputDto(
     long Id,
     string Name,
-    string? Description,
     string Color,
     List<string> ScheduledDays,
     TimeWindow? TimeWindow,
@@ -30,7 +29,6 @@ internal static class GetHabitById
         return TypedResults.Ok(new GetHabitByIdOutputDto(
             Id: habit.Id,
             Name: habit.Name,
-            Description: habit.Description,
             Color: habit.Color,
             ScheduledDays: habit.ScheduledDays.Select(d => d.ToString()).ToList(),
             TimeWindow: new TimeWindow(habit.StartTime, habit.EndTime),

@@ -19,9 +19,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .IsRequired()
                 .HasMaxLength(100);
 
-            entity.Property(h => h.Description)
-                .HasMaxLength(500);
-
             entity.Property(h => h.Color)
                 .IsRequired()
                 .HasMaxLength(20);

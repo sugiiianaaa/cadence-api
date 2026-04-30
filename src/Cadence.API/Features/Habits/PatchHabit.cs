@@ -27,8 +27,6 @@ internal static class PatchHabit
             habit.Color = input.Color;
         if (input.ScheduledDays != null)
             habit.ScheduledDays = input.ScheduledDays;
-        if (input.Description != null)
-            habit.Description = input.Description;
         if (input.TimeWindow != null)
         {
             habit.StartTime = input.TimeWindow.Start;
