@@ -42,8 +42,7 @@ internal sealed class TodayCommand : AsyncCommand
 
         await Task.WhenAll(tasks);
 
-        // TODO: show a summary line after saving, e.g. "3/4 done · 🔥 pushups streak 7"
-        AnsiConsole.MarkupLine("[green]Saved.[/]");
+        AnsiConsole.MarkupLine($"[green]Saved.[/]  [grey]{selected.Count}/{habits.Count} today[/]");
         return 0;
     }
 

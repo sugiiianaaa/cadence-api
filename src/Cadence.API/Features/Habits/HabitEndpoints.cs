@@ -16,25 +16,10 @@ public static class HabitEndpoints
             .WithSummary("List today's habits")
             .WithDescription("Returns the habits scheduled for today, with completion state and current streak read from HabitStats (staleness-guarded).");
 
-        habits.MapGet("/heatmap", GetHeatmap.Handle)
-            .WithName(nameof(GetHeatmap))
-            .WithSummary("Daily completion heatmap")
-            .WithDescription("Per-day (completed, total) counts across all unarchived habits for the past N weeks. Defaults to 16.");
-
-        habits.MapGet("/{habitId:long}", GetHabitById.Handle)
-            .WithName(nameof(GetHabitById))
-            .WithSummary("Get habit by id")
-            .WithDescription("Returns a single habit's full detail. 404 if missing.");
-
         habits.MapPost("/", CreateHabit.Handle)
             .WithName(nameof(CreateHabit))
             .WithSummary("Create a new habit")
             .WithDescription("Creates a habit and its HabitStats row. Returns the new habit's id with a Location header.");
-
-        habits.MapPatch("/{habitId:long}", PatchHabit.Handle)
-            .WithName(nameof(PatchHabit))
-            .WithSummary("Update a habit's metadata")
-            .WithDescription("Partially updates habit metadata. Fields left null are untouched. 404 if habit missing.");
 
         habits.MapDelete("/{habitId:long}", ArchiveHabit.Handle)
             .WithName(nameof(ArchiveHabit))

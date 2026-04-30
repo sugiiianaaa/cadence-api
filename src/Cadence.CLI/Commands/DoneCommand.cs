@@ -53,10 +53,17 @@ internal sealed class DoneCommand : AsyncCommand<DoneCommand.Settings>
         }
 
         var today = DateOnly.FromDateTime(DateTime.Today);
-        await client.SetCompletionAsync(habit.Id, today, !settings.Undo);
+        int streak = await client.SetCompletionAsync(habit.Id, today, !settings.Undo);
+
+        int prevDone = habits.Count(h => h.IsCompleted);
+        int newDone = settings.Undo
+            ? prevDone - (habit.IsCompleted ? 1 : 0)
+            : prevDone + (habit.IsCompleted ? 0 : 1);
+        int total = habits.Count;
 
         string verb = settings.Undo ? "Unmarked" : "Done";
-        AnsiConsole.MarkupLine($"[green]{verb}:[/] {habit.Name}");
+        string streakPart = streak > 0 && !settings.Undo ? $"  [grey]streak {streak}[/]" : "";
+        AnsiConsole.MarkupLine($"[green]{verb}:[/] {habit.Name}{streakPart}  [grey]{newDone}/{total} today[/]");
         return 0;
     }
 

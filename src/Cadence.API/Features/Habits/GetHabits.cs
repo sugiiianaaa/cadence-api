@@ -12,7 +12,8 @@ public record GetHabitOutputDto(
     string Color,
     TimeWindow? TimeWindow,
     List<string> ScheduledDays,
-    List<DateOnly> RecentCompletions);
+    List<DateOnly> RecentCompletions,
+    int CurrentStreak);
 
 internal static class GetHabits
 {
@@ -31,6 +32,7 @@ internal static class GetHabits
                 h.ScheduledDays,
                 h.StartTime,
                 h.EndTime,
+                CurrentStreak = h.Stats != null ? h.Stats.CurrentStreak : 0,
                 RecentCompletions = h.Completions
                     .Where(c => c.Date >= from && c.Date <= today)
                     .Select(c => c.Date)
@@ -45,7 +47,8 @@ internal static class GetHabits
                 Color: h.Color,
                 TimeWindow: new TimeWindow(h.StartTime, h.EndTime),
                 ScheduledDays: h.ScheduledDays.Select(d => d.ToString()).ToList(),
-                RecentCompletions: h.RecentCompletions))
+                RecentCompletions: h.RecentCompletions,
+                CurrentStreak: h.CurrentStreak))
             .ToList();
 
         return TypedResults.Ok(response);

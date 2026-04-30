@@ -22,7 +22,10 @@ internal sealed record GetHabitOutputDto(
     string Color,
     TimeWindowDto? TimeWindow,
     List<string> ScheduledDays,
-    List<DateOnly> RecentCompletions);
+    List<DateOnly> RecentCompletions,
+    int CurrentStreak);
+
+internal sealed record CompletionResultDto(int CurrentStreak);
 
 internal sealed record CreateHabitRequest(
     string Name,

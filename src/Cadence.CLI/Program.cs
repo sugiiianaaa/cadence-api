@@ -22,7 +22,7 @@ app.Configure(config =>
         .WithDescription("Mark a habit done  ·  cx done [name] [--undo]");
 
     config.AddCommand<WeekCommand>("week")
-        .WithDescription("Show weekly heatmap  ·  cx week [--weeks 8]");
+        .WithDescription("Show habit heatmap  ·  cx week <name> [--weeks 8]");
 
     config.AddBranch("habit", h =>
     {
@@ -30,6 +30,10 @@ app.Configure(config =>
             .WithDescription("Create a habit  ·  cx habit add <name>");
         h.AddCommand<ArchiveHabitCommand>("archive")
             .WithDescription("Archive a habit");
+        h.AddCommand<ListHabitsCommand>("list")
+            .WithDescription("List habits with scheduled days and streak");
+        h.AddCommand<ColorsCommand>("colors")
+            .WithDescription("List available color names");
     });
 });
 

@@ -1,6 +1,5 @@
 using System.Text.Json.Serialization;
 using Cadence.API.Data;
-using Cadence.API.Features.Analytics;
 using Cadence.API.Features.Habits;
 using Cadence.API.Infrastructure;
 using Cadence.API.Middleware;
@@ -43,7 +42,6 @@ app.UseExceptionHandler();
 app.UseMiddleware<ApiKeyMiddleware>();
 
 app.MapHabitEndpoints();
-app.MapAnalyticsEndpoints();
 app.MapHealthChecks("/health");
 
 app.Run();
