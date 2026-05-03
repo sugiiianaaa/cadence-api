@@ -19,10 +19,10 @@ app.Configure(config =>
         .WithDescription("Show and toggle today's habits (default)");
 
     config.AddCommand<DoneCommand>("done")
-        .WithDescription("Mark a habit done  ·  cx done [name] [--undo]");
+        .WithDescription("Mark a habit done  ·  cx done [[name]] [[--undo]]");
 
     config.AddCommand<WeekCommand>("week")
-        .WithDescription("Show habit heatmap  ·  cx week <name> [--weeks 8]");
+        .WithDescription("Show habit heatmap  ·  cx week <name> [[--weeks 8]]");
 
     config.AddBranch("habit", h =>
     {
